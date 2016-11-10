@@ -5,19 +5,19 @@ alttpTileset = Graphics.loadImage("Assets/Graphics/alttp.png")
 
 tileSizeX = 16
 tileSizeY = 16 
-mapOffsetX = 1
-mapOffsetY = 2
+mapOffsetX =2
+mapOffsetY =2
 
-board = { {1,1,1,1,1},
+board = { 
+          {1,2,1,1,1},
           {1,0,0,0,1},
           {1,0,0,0,1},
           {1,0,0,0,1},
           {1,1,1,1,1}
-          }
+        }
           
 boardSize=5;
  function getTileCoord(coordX,coordY,tileWidth,tileHeight)
-  
   local tileCoordX = math.floor(coordX / tileWidth);
   local tileCoordY = math.floor(coordY / tileHeight);
  end
@@ -26,24 +26,54 @@ boardSize=5;
  
  function drawMap(map)
   
-  Graphics.initBlend(TOP_SCREEN)
   for i=1,boardSize do 
     for j=1,boardSize do
       
-      local tileX = j * tileSizeX
-      local tileY = i * tileSizeY  
+      local tileMapX = map[i][j] * (tileSizeX)
+      local tileMapY = map[i][j] * (tileSizeY)
       
       if board[i][j] == 0 then
-        Graphics.drawPartialImage(tileX,tileY,tileSizeX * map[i][j]+mapOffsetX,tileSizeX*map[i][j]+mapOffsetX,tileSizeX,tileSizeY, alttpTileset)
+        --[[Graphics.drawPartialImage(mapOffsetX+tileX,
+                                  mapOffsetY+tileY,
+                                  tileSizeX * map[i][j]+mapOffsetX,
+                                  tileSizeY * map[i][j]+mapOffsetY,
+                                  tileSizeX,
+                                  tileSizeY, 
+                                  alttpTileset)]]--
+        Graphics.drawImageExtended((j-1)*tileSizeX+(tileSizeX/2), 
+                                   (i-1)*tileSizeY+(tileSizeY/2), 
+                                   tileMapX,
+                                   tileMapY, 
+                                   tileSizeX, 
+                                   tileSizeY, 
+                                   0, 
+                                   1, 
+                                   1,alttpTileset);
       end
       if board[i][j] == 1 then
-        Graphics.drawPartialImage(tileX,tileY,tileSizeX * map[i][j]+mapOffsetX,tileSizeX*map[i][j]+mapOffsetX,tileSizeX,tileSizeY, alttpTileset)
+        --[[Graphics.drawPartialImage(mapOffsetX+tileX,
+                                  mapOffsetY+tileY,
+                                  tileSizeX * map[i][j]+mapOffsetX,
+                                  tileSizeY * map[i][j]+mapOffsetY,
+                                  tileSizeX,
+                                  tileSizeY, 
+                                  alttpTileset)]]--
+                                  
+        Graphics.drawImageExtended((j-1)*tileSizeX+(tileSizeX/2), 
+                                   (i-1)*tileSizeY+(tileSizeY/2), 
+                                   tileMapX, 
+                                   tileMapY,  
+                                   tileSizeX, 
+                                   tileSizeY, 
+                                   0, 
+                                   1, 
+                                   1,alttpTileset);
       end
      end
   end
   
-  Graphics.fillEmptyRect(heroStats.coordX,heroStats.coordY,heroStats.coordX+heroStats.sizeX,heroStats.coordY+heroStats.sizeY,heroStats.color)
-  Graphics.termBlend()
+  Graphics.fillEmptyRect(heroStats.coordX,heroStats.coordX+heroStats.sizeX,heroStats.coordY,heroStats.coordY+heroStats.sizeY,heroStats.color)
+
   
   
 --[[	Screen.waitVblankStart()--]]
@@ -56,8 +86,8 @@ heroStats = {
              coordX=0,
              coordY=0,
              speed=0.1,
-             sizeX=32,
-             sizeY=32,
+             sizeX=16,
+             sizeY=16,
              color = Color.new(255,0,0),
              dx=0,
              dy=0,
@@ -93,7 +123,9 @@ while true do
     System.exit()
   end
   
-  drawMap(board)
+  Graphics.initBlend(TOP_SCREEN)
+    drawMap(board)
+  Graphics.termBlend()
   Screen.debugPrint(10,10,"Hero Tile: " .. math.floor(heroStats.coordX/tileSizeX) .. " , " .. math.floor(heroStats.coordY/tileSizeY),Color.new(255,255,255),TOP_SCREEN)
   Screen.debugPrint(10,20,"circleX,circleY " .. circleX .. " , " .. circleY,Color.new(255,255,255),TOP_SCREEN)
   
